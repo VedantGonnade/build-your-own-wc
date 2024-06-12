@@ -1,15 +1,18 @@
 #!/usr/bin/env ts-node
+import chalk from "chalk";
+import { calculateByteSize } from "./operations/calculateBytesize.ts";
 
-function byteSize(str: string): number {
-  return new Blob([str]).size;
-}
+const args = process.argv.slice(2)
 
 if (process.argv.length == 2) {
-  console.error("Usage: please provide atleast one argument");
+  console.error(chalk.red("No argument error: Please provide atleast one argument"));
   process.exit(1);
 }
 
-console.log(process.argv.length)
-console.log(process.argv[0]);
-console.log(process.argv[1]);
-
+if (args[0] == "-c") {
+  const result = calculateByteSize(args)
+  if (result) console.log(chalk.green(result))
+  else {
+    console.error(chalk.red("Bytesize of the text cannot be calculated"))
+  }
+}
