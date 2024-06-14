@@ -22,7 +22,7 @@ export class Operations {
     const fileResult: FileReadResult = readFile(fileName);
 
     if (fileResult.success) {
-      const lines: string[] | undefined = fileResult.content?.split("\r\n");
+      const lines: string[] | undefined = fileResult.content?.split(/\r?\n/g);
       console.log(chalk.green(`${lines?.length} ${fileName}`));
     } else {
       displayErrorAndExit(`ccwc: ${fileName}: No such file or directory`);
