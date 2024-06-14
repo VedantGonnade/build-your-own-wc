@@ -8,10 +8,10 @@ export class Operations {
   constructor() {}
 
   public calculateByteSize(fileName: string): void {
-    const fileResult: FileReadResult = readFile(fileName);
+    const {success, content}: FileReadResult = readFile(fileName);
 
-    if (fileResult.success) {
-      const size: number = byteSize(fileResult.content!);
+    if (success) {
+      const size: number = byteSize(content!);
       console.log(chalk.green(`${size} ${fileName}`));
     } else {
       displayErrorAndExit(`ccwc: ${fileName}: No such file or directory`);
@@ -19,10 +19,10 @@ export class Operations {
   }
 
   public calculateLineCount(fileName: string): void {
-    const fileResult: FileReadResult = readFile(fileName);
+    const {success, content}: FileReadResult = readFile(fileName);
 
-    if (fileResult.success) {
-      const lines: string[] | undefined = fileResult.content?.split(/\r?\n/g);
+    if (success) {
+      const lines: string[] | undefined = content?.split(/\r?\n/g);
       console.log(chalk.green(`${lines?.length} ${fileName}`));
     } else {
       displayErrorAndExit(`ccwc: ${fileName}: No such file or directory`);
@@ -32,10 +32,10 @@ export class Operations {
   }
 
   public calculateWordCount(fileName: string): void {
-    const fileResult: FileReadResult = readFile(fileName);
+    const {success, content}: FileReadResult = readFile(fileName);
 
-    if (fileResult.success) {
-      var matches = fileResult.content?.split(/[\s]+/);
+    if (success) {
+      var matches = content?.split(/[\s]+/);
       console.log(chalk.green(`${matches?.length} ${fileName}`));
     } else {
       displayErrorAndExit(`ccwc: ${fileName}: No such file or directory`);
