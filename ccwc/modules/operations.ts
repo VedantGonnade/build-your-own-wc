@@ -36,7 +36,7 @@ export class Operations {
 
     if (success) {
       const words = content?.split(/[\s]+/);
-      console.log(chalk.green(`${matches?.length} ${fileName}`));
+      console.log(chalk.green(`${words?.length} ${fileName}`));
     } else {
       displayErrorAndExit(`ccwc: ${fileName}: No such file or directory`);
     }
