@@ -35,7 +35,7 @@ export class Operations {
     const {success, content}: FileReadResult = readFile(fileName);
 
     if (success) {
-      var matches = content?.split(/[\s]+/);
+      const words = content?.split(/[\s]+/);
       console.log(chalk.green(`${matches?.length} ${fileName}`));
     } else {
       displayErrorAndExit(`ccwc: ${fileName}: No such file or directory`);
