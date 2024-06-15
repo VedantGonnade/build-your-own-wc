@@ -81,7 +81,7 @@ function performOperation(
     case "-m":
       return operations.calculateCharacterCount(fileContent);
     default:
-      return operations.calculateByteLineWord(fileContent);
+      return operations.calculateLineWordByte(fileContent);
   }
 }
 

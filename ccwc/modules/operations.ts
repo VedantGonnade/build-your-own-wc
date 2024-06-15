@@ -19,7 +19,7 @@ export class Operations {
     return fileContent.length;
   }
 
-  public calculateByteLineWord(fileContent: string): string {
+  public calculateLineWordByte(fileContent: string): string {
     const size: number = this.calculateByteSize(fileContent);
     const lines: number = this.calculateLineCount(fileContent);
     const words: number = this.calculateWordCount(fileContent);
