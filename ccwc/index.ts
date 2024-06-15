@@ -36,6 +36,9 @@ switch (option) {
   case "-w":
     operations.calculateWordCount(fileName);
     break;
+  case "-m":
+    operations.calculateCharacterCount(fileName);
+    break;
   default:
     displayErrorAndExit(
       `Invalid option: ${option}. Valid options are '-c' for byte size and '-l' for line count`

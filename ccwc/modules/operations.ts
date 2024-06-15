@@ -8,7 +8,7 @@ export class Operations {
   constructor() {}
 
   public calculateByteSize(fileName: string): void {
-    const {success, content}: FileReadResult = readFile(fileName);
+    const { success, content }: FileReadResult = readFile(fileName);
 
     if (success) {
       const size: number = byteSize(content!);
@@ -19,7 +19,7 @@ export class Operations {
   }
 
   public calculateLineCount(fileName: string): void {
-    const {success, content}: FileReadResult = readFile(fileName);
+    const { success, content }: FileReadResult = readFile(fileName);
 
     if (success) {
       const lines: string[] | undefined = content?.split(/\r?\n/g);
@@ -32,11 +32,22 @@ export class Operations {
   }
 
   public calculateWordCount(fileName: string): void {
-    const {success, content}: FileReadResult = readFile(fileName);
+    const { success, content }: FileReadResult = readFile(fileName);
 
     if (success) {
       const words = content?.split(/[\s]+/);
       console.log(chalk.green(`${words?.length} ${fileName}`));
+    } else {
+      displayErrorAndExit(`ccwc: ${fileName}: No such file or directory`);
+    }
+  }
+
+  public calculateCharacterCount(fileName: string): void {
+    const { success, content }: FileReadResult = readFile(fileName);
+
+    if (success) {
+      const charcters = content?.length;
+      console.log(chalk.green(`${charcters} ${fileName}`));
     } else {
       displayErrorAndExit(`ccwc: ${fileName}: No such file or directory`);
     }
