@@ -7,6 +7,7 @@ export interface FileReadResult {
   content?: string;
 }
 
+
 export class Utils {
   constructor() {}
 
