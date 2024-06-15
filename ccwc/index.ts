@@ -46,16 +46,13 @@ async function main() {
         );
       }
 
-      const { success, content }: FileReadResult = utils.readFile(fileName);
+      const { success, content, error }: FileReadResult =
+        utils.readFile(fileName);
       if (success && content) {
         const data = performOperation(option, content);
         utils.displayResultAndExit(data, fileName);
       } else {
-        throw new Error(
-          utils.displayErrorAndExit(
-            `ccwc: ${fileName}: No such file or directory`
-          )
-        );
+        throw new Error(error);
       }
     }
   } catch (error: any) {
