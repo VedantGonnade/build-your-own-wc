@@ -17,8 +17,8 @@ export class Utils {
     return chunks.join("");
   }
 
-  public displayErrorAndExit(message: string): string {
-    return chalk.red(message);
+  public displayErrorAndExit(message: string): void {
+    console.error(chalk.red(message));
   }
 
   public displayResultAndExit(

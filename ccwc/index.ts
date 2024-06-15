@@ -18,17 +18,13 @@ async function main() {
       utils.displayResultAndExit(data);
     } else {
       if (args.length === 0) {
-        utils.displayErrorAndExit(
+        throw new Error(
           "No Arguments error: Please provide at least one argument"
         );
       }
 
       if (args.length === 1 && option.startsWith("-")) {
-        throw new Error(
-          utils.displayErrorAndExit(
-            "No FileName error: Please provide a file name"
-          )
-        );
+        throw new Error("No FileName error: Please provide a file name");
       }
 
       let fileName: string | undefined;
@@ -39,11 +35,7 @@ async function main() {
       }
 
       if (!fileName) {
-        throw new Error(
-          utils.displayErrorAndExit(
-            "No FileName error: Please provide a file name"
-          )
-        );
+        throw new Error("No FileName error: Please provide a file name");
       }
 
       const { success, content, error }: FileReadResult =
@@ -57,6 +49,7 @@ async function main() {
     }
   } catch (error: any) {
     utils.displayErrorAndExit(`An unexpected error occurred: ${error.message}`);
+    process.exit(1);
   }
 }
 
@@ -65,7 +58,7 @@ function performOperation(
   fileContent: string
 ): string | number {
   if (!fileContent) {
-    throw new Error(utils.displayErrorAndExit("file provided has no text"));
+    throw new Error("file provided has no text");
   }
 
   switch (option) {
