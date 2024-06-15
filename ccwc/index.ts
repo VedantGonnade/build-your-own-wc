@@ -1,47 +1,88 @@
 #!/usr/bin/env ts-node
 
+import { argv } from "process";
 import { Operations } from "./modules/operations.ts";
-import { Utils} from "./modules/utils.ts";
+import { FileReadResult, Utils } from "./modules/utils.ts";
 
-const args: string[] = process.argv.slice(2);
-
-const operations = new Operations();
-const { displayErrorAndExit } = new Utils();
-
-if (args.length === 0) {
-  displayErrorAndExit(
-    "No argument error: Please provide at least one argument"
-  );
-}
-
-if (args.length === 1) {
-  displayErrorAndExit("No FileName error: Please provide one file name");
-}
-
-if (args.length > 2) {
-  displayErrorAndExit("Extra argument error: only two arguments are allowed");
-}
+const args: string[] = argv.slice(2);
 
 const option = args[0];
-const fileName = args[1];
+const operations = new Operations();
+const utils = new Utils();
 
+async function main() {
+  try {
+    if (!process.stdin.isTTY) {
+      const fileContent = await utils.readPipedInput(process.stdin);
+      const data = performOperation(option, fileContent);
+      utils.displayResultAndExit(data);
+    } else {
+      if (args.length === 0) {
+        utils.displayErrorAndExit(
+          "No Arguments error: Please provide at least one argument"
+        );
+      }
 
-switch (option) {
-  case "-c":
-    operations.calculateByteSize(fileName);
-    break;
-  case "-l":
-    operations.calculateLineCount(fileName);
-    break;
-  case "-w":
-    operations.calculateWordCount(fileName);
-    break;
-  case "-m":
-    operations.calculateCharacterCount(fileName);
-    break;
-  default:
-    displayErrorAndExit(
-      `Invalid option: ${option}. Valid options are '-c' for byte size and '-l' for line count`
-    );
-    break;
+      if (args.length === 1 && option.startsWith("-")) {
+        throw new Error(
+          utils.displayErrorAndExit(
+            "No FileName error: Please provide a file name"
+          )
+        );
+      }
+
+      let fileName: string | undefined;
+      if (args.length === 2) {
+        fileName = args[1];
+      } else if (!option.startsWith("-")) {
+        fileName = option;
+      }
+
+      if (!fileName) {
+        throw new Error(
+          utils.displayErrorAndExit(
+            "No FileName error: Please provide a file name"
+          )
+        );
+      }
+
+      const { success, content }: FileReadResult = utils.readFile(fileName);
+      if (success && content) {
+        const data = performOperation(option, content);
+        utils.displayResultAndExit(data, fileName);
+      } else {
+        throw new Error(
+          utils.displayErrorAndExit(
+            `ccwc: ${fileName}: No such file or directory`
+          )
+        );
+      }
+    }
+  } catch (error: any) {
+    utils.displayErrorAndExit(`An unexpected error occurred: ${error.message}`);
+  }
 }
+
+function performOperation(
+  option: string,
+  fileContent: string
+): string | number {
+  if (!fileContent) {
+    throw new Error(utils.displayErrorAndExit("file provided has no text"));
+  }
+
+  switch (option) {
+    case "-c":
+      return operations.calculateByteSize(fileContent);
+    case "-l":
+      return operations.calculateLineCount(fileContent);
+    case "-w":
+      return operations.calculateWordCount(fileContent);
+    case "-m":
+      return operations.calculateCharacterCount(fileContent);
+    default:
+      return operations.calculateByteLineWord(fileContent);
+  }
+}
+
+main();

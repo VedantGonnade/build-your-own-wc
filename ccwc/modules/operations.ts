@@ -1,55 +1,28 @@
 import { byteSize } from "./blob.ts";
-import chalk from "chalk";
-import { FileReadResult, Utils } from "./utils.ts";
-
-const { displayErrorAndExit, readFile } = new Utils();
 
 export class Operations {
   constructor() {}
 
-  public calculateByteSize(fileName: string): void {
-    const { success, content }: FileReadResult = readFile(fileName);
-
-    if (success) {
-      const size: number = byteSize(content!);
-      console.log(chalk.green(`${size} ${fileName}`));
-    } else {
-      displayErrorAndExit(`ccwc: ${fileName}: No such file or directory`);
-    }
+  public calculateByteSize(fileContent: string): number {
+    return byteSize(fileContent);
   }
 
-  public calculateLineCount(fileName: string): void {
-    const { success, content }: FileReadResult = readFile(fileName);
-
-    if (success) {
-      const lines: string[] | undefined = content?.split(/\r?\n/g);
-      console.log(chalk.green(`${lines?.length} ${fileName}`));
-    } else {
-      displayErrorAndExit(`ccwc: ${fileName}: No such file or directory`);
-    }
-
-    return;
+  public calculateLineCount(fileContent: string): number {
+    return fileContent.split(/\r?\n/g).length;
   }
 
-  public calculateWordCount(fileName: string): void {
-    const { success, content }: FileReadResult = readFile(fileName);
-
-    if (success) {
-      const words = content?.split(/[\s]+/);
-      console.log(chalk.green(`${words?.length} ${fileName}`));
-    } else {
-      displayErrorAndExit(`ccwc: ${fileName}: No such file or directory`);
-    }
+  public calculateWordCount(fileContent: string): number {
+    return fileContent.trim().split(/\s+/).length;
   }
 
-  public calculateCharacterCount(fileName: string): void {
-    const { success, content }: FileReadResult = readFile(fileName);
+  public calculateCharacterCount(fileContent: string): number {
+    return fileContent.length;
+  }
 
-    if (success) {
-      const charcters = content?.length;
-      console.log(chalk.green(`${charcters} ${fileName}`));
-    } else {
-      displayErrorAndExit(`ccwc: ${fileName}: No such file or directory`);
-    }
+  public calculateByteLineWord(fileContent: string): string {
+    const size: number = this.calculateByteSize(fileContent);
+    const lines: number = this.calculateLineCount(fileContent);
+    const words: number = this.calculateWordCount(fileContent);
+    return `${lines} ${words} ${size}`;
   }
 }

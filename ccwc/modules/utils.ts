@@ -8,25 +8,36 @@ export interface FileReadResult {
 }
 
 export class Utils {
-  constructor(){}
+  constructor() {}
 
-    public displayErrorAndExit(message: string): void {
-    console.error(chalk.red(message));
-    process.exit(1);
+  public async readPipedInput(input: NodeJS.ReadStream): Promise<string> {
+    let data = "";
+    for await (const chunk of input) data += chunk;
+    return data;
+  }
+
+  public displayErrorAndExit(message: string): string {
+    return chalk.red(message);
+  }
+
+  public displayResultAndExit(
+    message: string | number | undefined,
+    fileName?: string
+  ): void {
+    const name = fileName ? fileName : ""
+    console.log(chalk.green(`${message} ${name}`));
+    process.exit(0);
   }
 
   public readFile(fileName: string): FileReadResult {
-      try {
-        const filePath: string = path.resolve(fileName);
-        const content = fs.readFileSync(filePath, "utf-8");
-        return { success: true, content };
-      } catch (error: any) {
-        return {
-          success: false,
-        };
-      }
+    try {
+      const filePath: string = path.resolve(fileName);
+      const content = fs.readFileSync(filePath, "utf-8");
+      return { success: true, content };
+    } catch (error) {
+      return {
+        success: false,
+      };
     }
-
+  }
 }
-
-
